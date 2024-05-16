@@ -1,0 +1,9 @@
+flask
+datetime
+mime
+pytest
+pytest-flask
+pywin32
+flask_sqlalchemy
+flask-cors
+schedule

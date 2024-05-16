@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Evento</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Adicionar Evento</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="manage_events.html">Gerenciar Eventos</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <form id="event-form">
+            <label for="title">Título:</label>
+            <input type="text" id="title" name="title" required>
+            <label for="description">Descrição:</label>
+            <input type="text" id="description" name="description" required>
+            <label for="date">Data:</label>
+            <input type="date" id="date" name="date" required>
+            <button type="submit">Adicionar Evento</button>
+        </form>
+    </div>
+    <footer>
+        <p>&copy; 2023 Monitoring App</p>
+    </footer>
+    <script src="main.js"></script>
+</body>
+</html>
