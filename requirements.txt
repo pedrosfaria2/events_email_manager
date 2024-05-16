@@ -7,3 +7,4 @@ pywin32
 flask_sqlalchemy
 flask-cors
 schedule
+pytest-cov
