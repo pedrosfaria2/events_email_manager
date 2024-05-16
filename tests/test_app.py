@@ -1,5 +1,3 @@
-# tests/test_app.py
-
 def test_add_event(client):
     response = client.post('/events', json={
         'title': 'Test Event',

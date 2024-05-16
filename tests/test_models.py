@@ -1,5 +1,3 @@
-# tests/test_models.py
-
 import pytest
 from backend.models import Event, Notification
 

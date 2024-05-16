@@ -1,5 +1,3 @@
-# tests/conftest.py
-
 import pytest
 from backend import create_app, db
 

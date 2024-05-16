@@ -6,7 +6,7 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(200), nullable=False)
-    date = db.Column(db.String(10), nullable=False)  # Armazenado como string
+    date = db.Column(db.String(10), nullable=False)
     start_time = db.Column(db.String(5))
     end_time = db.Column(db.String(5))
     recurrence = db.Column(db.Integer)

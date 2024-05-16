@@ -1,5 +1,3 @@
-# backend/app.py
-
 from flask import Blueprint, request, jsonify, send_from_directory, render_template
 from datetime import datetime
 from .models import db, Event, Notification

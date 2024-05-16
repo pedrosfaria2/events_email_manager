@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Script para filtrar e exibir eventos na página check_events.html
     var filterForm = document.getElementById('filter-form');
     if (filterForm) {
         var eventsTableBody = document.getElementById('events-table').getElementsByTagName('tbody')[0];
@@ -73,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch(`/events?start=${startDate}&end=${endDate}`)
                 .then(response => response.json())
                 .then(events => {
-                    eventsTableBody.innerHTML = ''; // Clear previous results
+                    eventsTableBody.innerHTML = '';
 
                     if (events.length === 0) {
                         var row = eventsTableBody.insertRow();
@@ -93,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                     }
 
-                    // Mostrar o modal após carregar os eventos
                     $('#eventsModal').modal('show');
                 })
                 .catch(error => {
