@@ -1,13 +1,20 @@
-body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+/* Reset básico */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f8f9fa;
-    color: #333;
+    box-sizing: border-box;
 }
 
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Estilo do cabeçalho */
 header {
-    background-color: #007bff;
+    background-color: #2c3e50;
     color: white;
     padding: 20px 0;
     text-align: center;
@@ -15,53 +22,82 @@ header {
 }
 
 header h1 {
-    margin: 0;
     font-size: 28px;
 }
 
-nav ul {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    background-color: #007bff;
-    margin: 0;
+/* Estilo da navegação */
+nav {
+    background-color: #34495e;
 }
 
-nav ul li {
+nav ul, nav ul li {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
     margin: 0;
 }
 
 nav ul li a {
-    color: white;
-    padding: 15px 20px;
-    text-decoration: none;
     display: block;
-    text-align: center;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #2c3e50;
     transition: background-color 0.3s;
 }
 
 nav ul li a:hover {
-    background-color: #0056b3;
+    background-color: #1a242f;
 }
 
+/* Estilo do contêiner */
 .container {
-    max-width: 900px;
-    margin: 30px auto;
+    max-width: 800px;
+    margin: 40px auto;
     padding: 20px;
     background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
 }
 
+/* Estilo dos cabeçalhos */
 h2 {
-    color: #007bff;
+    color: #2c3e50;
     margin-bottom: 20px;
 }
 
+/* Estilo dos links na lista */
+.container ul {
+    list-style: none;
+    padding: 0;
+}
+
+.container ul li {
+    margin: 10px 0;
+}
+
+.container ul li a {
+    display: block;
+    padding: 10px;
+    background-color: #2c3e50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.container ul li a:hover {
+    background-color: #1a242f;
+}
+
+/* Estilo dos formulários */
 form {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 form label {
@@ -70,47 +106,52 @@ form label {
 }
 
 form input, form button {
+    width: 100%;
+    max-width: 300px;
     padding: 10px;
-    margin: 5px 0 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    margin: 5px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     font-size: 16px;
 }
 
 form input:focus {
-    border-color: #007bff;
+    border-color: #34495e;
     outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 0 5px rgba(52, 73, 94, 0.5);
 }
 
 form button {
-    background-color: #007bff;
+    background-color: #2c3e50;
     color: white;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
+    padding: 12px;
 }
 
 form button:hover {
-    background-color: #0056b3;
+    background-color: #1a242f;
 }
 
+/* Estilo da lista */
 ul {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
 }
 
 li {
-    background: #f8f9fa;
+    background: #ecf0f1;
     margin: 10px 0;
     padding: 15px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* Estilo do rodapé */
 footer {
-    background-color: #007bff;
+    background-color: #2c3e50;
     color: white;
     text-align: center;
     padding: 15px 0;
