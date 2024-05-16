@@ -4,6 +4,31 @@ from .models import db, Event, Notification
 
 main = Blueprint('main', __name__)
 
+
+@main.route('/events/<int:event_id>', methods=['PUT'])
+def update_event(event_id):
+    event = Event.query.get_or_404(event_id)
+    data = request.get_json()
+
+    event.title = data['title']
+    event.description = data['description']
+    event.date = data['date']
+    event.start_time = data.get('startTime')
+    event.end_time = data.get('endTime')
+    event.recurrence = data.get('recurrence')
+    event.all_day = data.get('allDay', False)
+
+    db.session.commit()
+    return jsonify({'message': 'Event updated successfully'}), 200
+
+
+@main.route('/events/<int:event_id>', methods=['DELETE'])
+def delete_event(event_id):
+    event = Event.query.get_or_404(event_id)
+    db.session.delete(event)
+    db.session.commit()
+    return jsonify({'message': 'Event deleted successfully'}), 200
+
 @main.route('/')
 def index():
     return render_template('index.html')
@@ -54,19 +79,16 @@ def get_events():
         events = Event.query.filter(Event.date.between(start_date, end_date)).all()
     else:
         events = Event.query.all()
-    
-    events_list = [
-        {
-            'title': e.title,
-            'description': e.description,
-            'date': e.date,
-            'start_time': e.start_time,
-            'end_time': e.end_time,
-            'recurrence': e.recurrence,
-            'all_day': e.all_day
-        } 
-        for e in events
-    ]
+    events_list = [{
+        'id': e.id,
+        'title': e.title,
+        'description': e.description,
+        'date': e.date if isinstance(e.date, str) else e.date.strftime('%Y-%m-%d'),
+        'start_time': e.start_time,
+        'end_time': e.end_time,
+        'recurrence': e.recurrence,
+        'all_day': e.all_day
+    } for e in events]
     return jsonify(events_list), 200
 
 @main.route('/notifications', methods=['POST'])
