@@ -9,8 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (allDayCheckbox.checked) {
                 startTimeInput.value = '09:00';
                 endTimeInput.value = '18:00';
-                startTimeInput.disabled = true;
-                endTimeInput.disabled = true;
             } else {
                 startTimeInput.disabled = false;
                 endTimeInput.disabled = false;

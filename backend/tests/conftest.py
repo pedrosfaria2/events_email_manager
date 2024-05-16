@@ -7,10 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 
 @pytest.fixture
 def app():
-    app = create_app()
-    app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test_app.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app = create_app(config_name='testing')
 
     with app.app_context():
         db.create_all()

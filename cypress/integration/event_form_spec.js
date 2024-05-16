@@ -1,6 +1,8 @@
+// cypress/integration/event_form_spec.js
+
 describe('Event Form', () => {
     beforeEach(() => {
-      cy.visit('http://localhost:5000/check_events.html');
+      cy.visit('/check_events.html');
     });
   
     it('should display modal when events are fetched', () => {
@@ -8,9 +10,10 @@ describe('Event Form', () => {
       cy.get('#end-date').type('2024-12-31');
       cy.get('#filter-form').submit();
   
+      cy.wait(500);
+  
       cy.get('#eventsModal').should('be.visible');
       cy.get('#events-table tbody tr').should('have.length.at.least', 1);
     });
-  
   });
   

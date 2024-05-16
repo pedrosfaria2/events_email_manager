@@ -1,17 +1,18 @@
+// cypress/e2e/event_form.cy.js
+
 describe('Event Form', () => {
-    beforeEach(() => {
-      cy.visit('http://localhost:5000/check_events.html');
-    });
-  
-    it('should display modal when events are fetched', () => {
-      cy.get('#start-date').type('2024-01-01');
-      cy.get('#end-date').type('2024-12-31');
-      cy.get('#filter-form').submit();
-  
-      cy.get('#eventsModal').should('be.visible');
-      cy.get('#events-table tbody tr').should('have.length.at.least', 1);
-    });
-  
-    // Adicione mais testes conforme necessário...
+  beforeEach(() => {
+    cy.visit('/check_events.html');
   });
-  
+
+  it('should display modal when events are fetched', () => {
+    cy.filterEvents('2024-01-01', '2024-12-31');
+
+    // Adicionar uma espera explícita mais longa e logs
+    cy.wait(1000); // espera por 1 segundo (ajuste conforme necessário)
+    cy.log('Submitted the filter form');
+
+    cy.verifyModalVisible();
+    cy.verifyEventsInTable(1);
+  });
+});

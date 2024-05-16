@@ -1,15 +1,22 @@
 from flask import Flask
 from .models import db
 
-def create_app():
+def create_app(config_name=None):
     app = Flask(__name__, static_folder='../frontend/static', template_folder='../frontend')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-    db.init_app(app)
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    from .app import main as main_blueprint
-    app.register_blueprint(main_blueprint)
+    if config_name == 'testing':
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test_app.db'
+        app.config['TESTING'] = True
+    else:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+
+    db.init_app(app)
 
     with app.app_context():
         db.create_all()
+
+    from .app import main as main_blueprint
+    app.register_blueprint(main_blueprint)
 
     return app
