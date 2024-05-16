@@ -1,18 +1,49 @@
-// cypress/e2e/event_form.cy.js
-
 describe('Event Form', () => {
-  beforeEach(() => {
-    cy.visit('/check_events.html');
-  });
+    beforeEach(() => {
+        // Add an event before each test
+        cy.request('POST', '/events', {
+            title: 'Initial Event',
+            description: 'Initial Description',
+            date: '2024-12-31',
+            startTime: '10:00',
+            endTime: '11:00',
+            recurrence: 'weekly',
+            allDay: false
+        }).then(response => {
+            expect(response.status).to.eq(201);
+        });
 
-  it('should display modal when events are fetched', () => {
-    cy.filterEvents('2024-01-01', '2024-12-31');
+        // Visit the page
+        cy.visit('/check_events.html');
 
-    // Adicionar uma espera explícita mais longa e logs
-    cy.wait(1000); // espera por 1 segundo (ajuste conforme necessário)
-    cy.log('Submitted the filter form');
+        // Filter events for the desired date range
+        cy.get('#start-date').type('2024-01-01');
+        cy.get('#end-date').type('2024-12-31');
+        cy.get('#filter-form').submit();
 
-    cy.verifyModalVisible();
-    cy.verifyEventsInTable(1);
-  });
+        // Wait for the events to be fetched and displayed
+        cy.wait(1000); // Adjust this value if needed
+    });
+
+    it('should display modal when events are fetched', () => {
+        cy.get('#eventsModal').should('be.visible');
+        cy.get('#events-table tbody tr').should('have.length.at.least', 1);
+    });
+
+    it('should edit an event', () => {
+        cy.get('#events-table tbody tr').first().find('.edit-event').click();
+        cy.get('#edit-title').clear().type('Updated Event');
+        cy.get('#edit-description').clear().type('Updated Description');
+        cy.get('#edit-event-form').submit();
+        cy.wait(20000); // Adjust this value if needed
+        cy.get('#events-table tbody tr').should('have.length.at.least', 1);
+        cy.get('#events-table tbody tr').first().contains('Updated Event');
+        cy.get('#events-table tbody tr').first().contains('Updated Description');
+    });
+
+    it('should delete an event', () => {
+        cy.get('#events-table tbody tr').first().find('.delete-event').click();
+        cy.wait(1000); // Adjust this value if needed
+        cy.get('#events-table tbody tr').should('have.length', 0);
+    });
 });

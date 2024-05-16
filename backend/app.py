@@ -4,15 +4,17 @@ from .models import db, Event, Notification
 
 main = Blueprint('main', __name__)
 
-
+# Rota para atualizar um evento
 @main.route('/events/<int:event_id>', methods=['PUT'])
 def update_event(event_id):
-    event = Event.query.get_or_404(event_id)
     data = request.get_json()
+    event = db.session.get(Event, event_id)
+    if not event:
+        return jsonify({'message': 'Event not found'}), 404
 
     event.title = data['title']
     event.description = data['description']
-    event.date = data['date']
+    event.date = datetime.strptime(data['date'], '%Y-%m-%d')
     event.start_time = data.get('startTime')
     event.end_time = data.get('endTime')
     event.recurrence = data.get('recurrence')
@@ -21,14 +23,18 @@ def update_event(event_id):
     db.session.commit()
     return jsonify({'message': 'Event updated successfully'}), 200
 
-
+# Rota para deletar um evento
 @main.route('/events/<int:event_id>', methods=['DELETE'])
 def delete_event(event_id):
-    event = Event.query.get_or_404(event_id)
+    event = db.session.get(Event, event_id)
+    if not event:
+        return jsonify({'message': 'Event not found'}), 404
+
     db.session.delete(event)
     db.session.commit()
     return jsonify({'message': 'Event deleted successfully'}), 200
 
+# Outras rotas
 @main.route('/')
 def index():
     return render_template('index.html')

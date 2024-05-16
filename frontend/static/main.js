@@ -1,12 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     var form = document.getElementById('event-form');
-    var editForm = document.getElementById('edit-form');
-    var allDayCheckbox = document.getElementById('all-day');
-    var startTimeInput = document.getElementById('start-time');
-    var endTimeInput = document.getElementById('end-time');
-    var currentEventId = null; // Variable to store the ID of the event being edited
+    if (form) {
+        var allDayCheckbox = document.getElementById('all-day');
+        var startTimeInput = document.getElementById('start-time');
+        var endTimeInput = document.getElementById('end-time');
 
-    if (allDayCheckbox) {
         allDayCheckbox.addEventListener('change', function () {
             if (allDayCheckbox.checked) {
                 startTimeInput.value = '09:00';
@@ -20,9 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 endTimeInput.value = '';
             }
         });
-    }
 
-    if (form) {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -63,50 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    if (editForm) {
-        editForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            var title = document.getElementById('edit-title').value;
-            var description = document.getElementById('edit-description').value;
-            var date = document.getElementById('edit-date').value;
-            var startTime = document.getElementById('edit-start-time').value;
-            var endTime = document.getElementById('edit-end-time').value;
-            var recurrence = document.getElementById('edit-recurrence').value;
-            var allDay = document.getElementById('edit-all-day').checked;
-
-            var event = {
-                title: title,
-                description: description,
-                date: date,
-                startTime: startTime,
-                endTime: endTime,
-                recurrence: recurrence,
-                allDay: allDay
-            };
-
-            fetch(`/events/${currentEventId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(event)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                alert('Evento atualizado com sucesso!');
-                editForm.reset();
-                $('#editEventModal').modal('hide');
-                filterForm.submit(); // Refresh the events list
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('Ocorreu um erro ao atualizar o evento.');
-            });
-        });
-    }
-
     var filterForm = document.getElementById('filter-form');
     if (filterForm) {
         var eventsTableBody = document.getElementById('events-table').getElementsByTagName('tbody')[0];
@@ -139,23 +91,22 @@ document.addEventListener('DOMContentLoaded', function () {
                             row.insertCell(6).textContent = event.all_day ? 'Sim' : 'Não';
 
                             var actionsCell = row.insertCell(7);
-                            var editIcon = document.createElement('i');
-                            editIcon.className = 'fas fa-edit';
-                            editIcon.style.cursor = 'pointer';
-                            editIcon.addEventListener('click', function () {
+                            actionsCell.classList.add('action-buttons');
+                            var editButton = document.createElement('button');
+                            editButton.classList.add('btn', 'btn-sm', 'btn-primary', 'edit-event');
+                            editButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+                            editButton.onclick = function () {
                                 openEditModal(event);
-                            });
+                            };
+                            actionsCell.appendChild(editButton);
 
-                            var deleteIcon = document.createElement('i');
-                            deleteIcon.className = 'fas fa-trash';
-                            deleteIcon.style.cursor = 'pointer';
-                            deleteIcon.style.marginLeft = '10px';
-                            deleteIcon.addEventListener('click', function () {
+                            var deleteButton = document.createElement('button');
+                            deleteButton.classList.add('btn', 'btn-sm', 'btn-danger', 'delete-event');
+                            deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                            deleteButton.onclick = function () {
                                 deleteEvent(event.id);
-                            });
-
-                            actionsCell.appendChild(editIcon);
-                            actionsCell.appendChild(deleteIcon);
+                            };
+                            actionsCell.appendChild(deleteButton);
                         });
                     }
 
@@ -168,10 +119,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function openEditModal(event) {
-        currentEventId = event.id;
+        document.getElementById('edit-event-id').value = event.id;
         document.getElementById('edit-title').value = event.title;
         document.getElementById('edit-description').value = event.description;
-        document.getElementById('edit-date').value = event.date;
+        document.getElementById('edit-date').value = event.date.split(' ')[0];
         document.getElementById('edit-start-time').value = event.start_time;
         document.getElementById('edit-end-time').value = event.end_time;
         document.getElementById('edit-recurrence').value = event.recurrence;
@@ -180,21 +131,64 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#editEventModal').modal('show');
     }
 
-    function deleteEvent(eventId) {
-        if (confirm('Tem certeza de que deseja excluir este evento?')) {
+    var editForm = document.getElementById('edit-event-form');
+    if (editForm) {
+        editForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var eventId = document.getElementById('edit-event-id').value;
+            var title = document.getElementById('edit-title').value;
+            var description = document.getElementById('edit-description').value;
+            var date = document.getElementById('edit-date').value;
+            var startTime = document.getElementById('edit-start-time').value;
+            var endTime = document.getElementById('edit-end-time').value;
+            var recurrence = document.getElementById('edit-recurrence').value;
+            var allDay = document.getElementById('edit-all-day').checked;
+
+            var updatedEvent = {
+                title: title,
+                description: description,
+                date: date,
+                startTime: startTime,
+                endTime: endTime,
+                recurrence: recurrence,
+                allDay: allDay
+            };
+
             fetch(`/events/${eventId}`, {
-                method: 'DELETE'
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedEvent)
             })
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
-                alert('Evento excluído com sucesso!');
-                filterForm.submit();
+                alert('Evento atualizado com sucesso!');
+                $('#editEventModal').modal('hide');
+                filterForm.submit();  // Recarregar a lista de eventos
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error:', error);
-                alert('Ocorreu um erro ao excluir o evento.');
+                alert('Ocorreu um erro ao atualizar o evento.');
             });
-        }
+        });
+    }
+
+    function deleteEvent(eventId) {
+        fetch(`/events/${eventId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            alert('Evento excluído com sucesso!');
+            filterForm.submit();  // Recarregar a lista de eventos
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('Ocorreu um erro ao excluir o evento.');
+        });
     }
 });

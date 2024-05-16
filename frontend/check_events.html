@@ -7,7 +7,22 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .modal-dialog {
+            max-width: 90%;  /* ou qualquer outra porcentagem ou valor fixo que você preferir */
+        }
+
+        .action-buttons button {
+            display: inline-block;
+            margin-right: 5px;
+            white-space: nowrap;
+        }
+        .action-buttons .btn i {
+            font-size: 14px; /* Diminuir o tamanho dos ícones */
+        }
+
+    </style>
 </head>
 <body>
     <header>
@@ -23,7 +38,7 @@
             <input type="date" id="end-date" name="end-date" required>
             <button type="submit" class="btn btn-primary">Filtrar</button>
         </form>
-        <!-- Modal -->
+        <!-- Modal de exibição de eventos -->
         <div class="modal fade" id="eventsModal" tabindex="-1" role="dialog" aria-labelledby="eventsModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -58,10 +73,9 @@
                 </div>
             </div>
         </div>
-
-        <!-- Edit Modal -->
+        <!-- Modal de edição de evento -->
         <div class="modal fade" id="editEventModal" tabindex="-1" role="dialog" aria-labelledby="editEventModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="editEventModalLabel">Editar Evento</h5>
@@ -70,14 +84,15 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="edit-form">
+                        <form id="edit-event-form">
+                            <input type="hidden" id="edit-event-id">
                             <div class="form-group">
                                 <label for="edit-title">Título</label>
                                 <input type="text" class="form-control" id="edit-title" required>
                             </div>
                             <div class="form-group">
                                 <label for="edit-description">Descrição</label>
-                                <input type="text" class="form-control" id="edit-description" required>
+                                <textarea class="form-control" id="edit-description" required></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="edit-date">Data</label>
@@ -93,9 +108,9 @@
                             </div>
                             <div class="form-group">
                                 <label for="edit-recurrence">Recorrência</label>
-                                <input type="number" class="form-control" id="edit-recurrence" min="1">
+                                <input type="text" class="form-control" id="edit-recurrence">
                             </div>
-                            <div class="form-group form-check">
+                            <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="edit-all-day">
                                 <label class="form-check-label" for="edit-all-day">Dia Todo</label>
                             </div>
