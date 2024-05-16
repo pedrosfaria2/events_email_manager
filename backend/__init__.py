@@ -5,7 +5,7 @@ from flask_cors import CORS
 db = SQLAlchemy()
 
 def create_app():
-    app = Flask(__name__, static_folder="../frontend", static_url_path="/")
+    app = Flask(__name__, static_folder="../frontend/", static_url_path="/")
     app.config.from_object('backend.config.Config')
     db.init_app(app)
     CORS(app)

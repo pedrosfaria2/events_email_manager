@@ -10,7 +10,7 @@ def index():
 
 @main.route('/<path:path>')
 def static_files(path):
-    return send_from_directory('../frontend', path)
+    return send_from_directory('../frontend/static', path)
 
 @main.route('/events', methods=['POST'])
 def add_event():
