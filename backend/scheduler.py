@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 import sys
 import os
 
-# Adicione o caminho do backend ao sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from backend import create_app
@@ -23,10 +22,27 @@ def send_weekly_automatic_exercise_email():
             Event.tags.contains('automatic exercise')
         ).all()
 
-        for event in events:
+        if events:
+            email_body = """
+            <html>
+            <body>
+                <p>Dear customer,</p>
+                <p>We would like to inform you about the following automatic exercises at B3 this week:</p>
+            """
+            for event in events:
+                email_body += f"<b>>>> {event.title} on {event.date.strftime('%Y-%m-%d')}</b>\n\n<p>{event.description}</p>\n\n"
+
+            email_body += """
+                <br>
+                <p>Best regards and good trading,</p>
+                <p>HFT Team of Nova Futura Investimentos.</p>
+            </body>
+            </html>
+            """
+
             send_email(
-                "Upcoming Automatic Exercise Event",
-                f"Don't forget about the automatic exercise event: {event.title} on {event.date}!",
+                "Upcoming Automatic Exercise Events at B3",
+                email_body,
                 "pedro.faria@novafutura.com.br"
             )
 

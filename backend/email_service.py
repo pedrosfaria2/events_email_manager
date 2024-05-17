@@ -5,7 +5,7 @@ def send_email(subject, message, recipient):
     mail = outlook.CreateItem(0)
     mail.Subject = subject
     mail.SentOnBehalfOfName = "pedro.faria@novafutura.com.br"
-    mail.Body = message
+    mail.HTMLBody = message
     mail.To = recipient
     mail.Send()
     print("Email sent successfully via Outlook")

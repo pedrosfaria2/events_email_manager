@@ -4,13 +4,11 @@ from dateutil.parser import parse
 import sys
 import os
 
-# Adicione o caminho do backend ao sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from backend import create_app, db
 from backend.add_event_to_db import add_events_to_db
 
-# Crie a aplicação Flask
 app = create_app() 
 
 Outlook = win32com.client.Dispatch("Outlook.Application")
