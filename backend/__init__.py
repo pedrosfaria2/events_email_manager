@@ -1,5 +1,6 @@
 from flask import Flask
 from .models import db
+from .scheduler_thread import start_scheduler_thread
 
 def create_app(config_name='None'):
     app = Flask(__name__, static_folder='../frontend/static', template_folder='../frontend')
@@ -18,5 +19,7 @@ def create_app(config_name='None'):
 
     from .app import main as main_blueprint
     app.register_blueprint(main_blueprint)
+
+    start_scheduler_thread(app)
 
     return app

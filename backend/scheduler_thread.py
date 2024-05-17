@@ -1,19 +1,12 @@
 import schedule
 import time
-from datetime import datetime, timedelta
-import sys
-import os
 import threading
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from backend import create_app
-from backend.models import db, Event, Notification
+from datetime import datetime, timedelta
+from backend.models import Event, Notification
 from backend.email_service import send_email
+import pythoncom
 
-app = create_app()
-
-def send_weekly_automatic_exercise_email():
+def send_weekly_automatic_exercise_email(app):
     with app.app_context():
         today = datetime.now()
         start_of_week = today - timedelta(days=today.weekday())
@@ -38,24 +31,22 @@ def send_weekly_automatic_exercise_email():
                 "pedro.faria@novafutura.com.br"
             )
 
-def send_notifications():
+def send_notifications(app):
     with app.app_context():
         notifications = Notification.query.all()
         for notification in notifications:
             send_email(notification.subject, notification.message, "recipient@example.com")
 
-def run_scheduler():
-    schedule.every().monday.at("08:00").do(send_weekly_automatic_exercise_email)
+def run_scheduler(app):
+    pythoncom.CoInitialize()
+    schedule.every().monday.at("07:30").do(send_weekly_automatic_exercise_email, app=app)
 
     while True:
         schedule.run_pending()
         time.sleep(1)
+    pythoncom.CoUninitialize()
 
-def start_scheduler_thread():
-    scheduler_thread = threading.Thread(target=run_scheduler)
+def start_scheduler_thread(app):
+    scheduler_thread = threading.Thread(target=run_scheduler, args=(app,))
     scheduler_thread.daemon = True
     scheduler_thread.start()
-
-if __name__ == "__main__":
-    start_scheduler_thread()
-    app.run(debug=True)
