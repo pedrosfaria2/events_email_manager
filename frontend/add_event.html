@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicionar Evento</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
 </head>
@@ -13,34 +14,39 @@
     </header>
     <div class="container">
         <form id="event-form">
-            <label for="title">Título:</label>
-            <input type="text" id="title" name="title" required>
-            
-            <label for="description">Descrição:</label>
-            <input type="text" id="description" name="description" required>
-            
-            <label for="date">Data:</label>
-            <input type="date" id="date" name="date" required>
-            
-            <label for="start-time">Hora de Início:</label>
-            <input type="time" id="start-time" name="start-time">
-            
-            <label for="end-time">Hora de Fim:</label>
-            <input type="time" id="end-time" name="end-time">
-            
-            <label>
-                <input type="checkbox" id="all-day" name="all-day"> Dia Todo
-            </label>
-            
-            <label for="recurrence">Recorrência:</label>
-            <input type="number" id="recurrence" name="recurrence" min="1" placeholder="Dias de intervalo">
-            
-            <button type="submit">Adicionar Evento</button>
+            <div class="form-group">
+                <label for="title">Título</label>
+                <input type="text" class="form-control" id="title" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Descrição</label>
+                <textarea class="form-control" id="description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="date">Data</label>
+                <input type="date" class="form-control" id="date" required>
+            </div>
+            <div class="form-group">
+                <label for="start-time">Hora de Início</label>
+                <input type="time" class="form-control" id="start-time">
+            </div>
+            <div class="form-group">
+                <label for="end-time">Hora de Fim</label>
+                <input type="time" class="form-control" id="end-time">
+            </div>
+            <div class="form-group">
+                <label for="tags">Tags</label>
+                <input type="text" class="form-control" id="tags">
+            </div>
+            <button type="submit" class="btn btn-primary">Adicionar Evento</button>
         </form>
     </div>
     <footer>
         <p>&copy; 2024 Nova Futura Investimentos</p>
     </footer>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="/static/main.js"></script>
 </body>
 </html>

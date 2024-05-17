@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Eventos</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+</head>
+<body>
+    <header>
+        <h1>Enviar Eventos</h1>
+    </header>
+    <div class="container">
+        <form id="send-events-form">
+            <table class="table table-striped" id="events-table">
+                <thead>
+                    <tr>
+                        <th>Selecionar</th>
+                        <th>Título</th>
+                        <th>Descrição</th>
+                        <th>Data</th>
+                        <th>Hora de Início</th>
+                        <th>Hora de Fim</th>
+                        <th>Tags</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Eventos serão inseridos aqui -->
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Enviar Email</button>
+        </form>
+    </div>
+    <footer>
+        <p>&copy; 2024 Nova Futura Investimentos</p>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="/static/main.js"></script>
+</body>
+</html>

@@ -4,29 +4,47 @@ from .models import db, Event, Notification
 
 main = Blueprint('main', __name__)
 
-# Rota para atualizar um evento
+@main.route('/send_events', methods=['POST'])
+def send_events():
+    data = request.get_json()
+    event_ids = data.get('event_ids', [])
+    
+    if not event_ids:
+        return jsonify({'message': 'Nenhum evento selecionado.'}), 400
+    
+    events = Event.query.filter(Event.id.in_(event_ids)).all()
+    
+    if not events:
+        return jsonify({'message': 'Nenhum evento encontrado.'}), 404
+
+    subject = "Eventos Selecionados"
+    body = "Aqui estão os eventos selecionados:\n\n"
+    
+    for event in events:
+        body += f"Título: {event.title}\nDescrição: {event.description}\nData: {event.date.strftime('%Y-%m-%d')}\nHora de Início: {event.start_time}\nHora de Fim: {event.end_time}\nTags: {event.tags}\n\n"
+    
+    return jsonify({'subject': subject, 'body': body}), 200
+
 @main.route('/events/<int:event_id>', methods=['PUT'])
 def update_event(event_id):
     data = request.get_json()
-    event = db.session.get(Event, event_id)
+    event = db.session.get(Event, event_id)  # Alterado para db.session.get
     if not event:
         return jsonify({'message': 'Event not found'}), 404
 
     event.title = data['title']
     event.description = data['description']
-    event.date = datetime.strptime(data['date'], '%Y-%m-%d')
+    event.date = datetime.strptime(data['date'], '%Y-%m-%d').date()  # Converter string para date
     event.start_time = data.get('startTime')
     event.end_time = data.get('endTime')
-    event.recurrence = data.get('recurrence')
-    event.all_day = data.get('allDay', False)
+    event.tags = data.get('tags', '')
 
     db.session.commit()
     return jsonify({'message': 'Event updated successfully'}), 200
 
-# Rota para deletar um evento
 @main.route('/events/<int:event_id>', methods=['DELETE'])
 def delete_event(event_id):
-    event = db.session.get(Event, event_id)
+    event = db.session.get(Event, event_id)  # Alterado para db.session.get
     if not event:
         return jsonify({'message': 'Event not found'}), 404
 
@@ -34,7 +52,6 @@ def delete_event(event_id):
     db.session.commit()
     return jsonify({'message': 'Event deleted successfully'}), 200
 
-# Outras rotas
 @main.route('/')
 def index():
     return render_template('index.html')
@@ -59,17 +76,20 @@ def add_event_page():
 def check_event_page():
     return render_template('check_events.html')
 
+@main.route('/send_events.html')
+def send_events_page():
+    return render_template('send_events.html')
+
 @main.route('/events', methods=['POST'])
 def add_event():
     data = request.get_json()
     event = Event(
         title=data['title'],
         description=data['description'],
-        date=datetime.strptime(data['date'], '%Y-%m-%d').strftime('%Y-%m-%d'),
+        date=datetime.strptime(data['date'], '%Y-%m-%d').date(),  # Converter string para date
         start_time=data.get('startTime'),
         end_time=data.get('endTime'),
-        recurrence=data.get('recurrence'),
-        all_day=data.get('allDay', False)
+        tags=data.get('tags', '')
     )
     db.session.add(event)
     db.session.commit()
@@ -77,25 +97,36 @@ def add_event():
 
 @main.route('/events', methods=['GET'])
 def get_events():
-    start_date = request.args.get('start')
-    end_date = request.args.get('end')
-    if start_date and end_date:
-        start_date = datetime.strptime(start_date, '%Y-%m-%d')
-        end_date = datetime.strptime(end_date, '%Y-%m-%d')
-        events = Event.query.filter(Event.date.between(start_date, end_date)).all()
-    else:
-        events = Event.query.all()
-    events_list = [{
-        'id': e.id,
-        'title': e.title,
-        'description': e.description,
-        'date': e.date if isinstance(e.date, str) else e.date.strftime('%Y-%m-%d'),
-        'start_time': e.start_time,
-        'end_time': e.end_time,
-        'recurrence': e.recurrence,
-        'all_day': e.all_day
-    } for e in events]
+    events = Event.query.all()
+    events_list = []
+    for event in events:
+        events_list.append({
+            'id': event.id,
+            'title': event.title,
+            'description': event.description,
+            'date': event.date.strftime('%Y-%m-%d'),
+            'startTime': event.start_time,  # Corrigido para startTime
+            'endTime': event.end_time,      # Corrigido para endTime
+            'tags': event.tags
+        })
     return jsonify(events_list), 200
+
+@main.route('/events/<int:event_id>', methods=['GET'])
+def get_event(event_id):
+    event = db.session.get(Event, event_id)  # Alterado para db.session.get
+    if not event:
+        return jsonify({'message': 'Event not found'}), 404
+
+    event_data = {
+        'id': event.id,
+        'title': event.title,
+        'description': event.description,
+        'date': event.date.strftime('%Y-%m-%d'),
+        'startTime': event.start_time,  # Corrigido para startTime
+        'endTime': event.end_time,      # Corrigido para endTime
+        'tags': event.tags
+    }
+    return jsonify(event_data), 200
 
 @main.route('/notifications', methods=['POST'])
 def add_notification():

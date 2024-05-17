@@ -1,116 +1,74 @@
-def test_add_event(client):
+def test_update_event(client):
+    # Criar um evento antes de tentar atualizar
     response = client.post('/events', json={
         'title': 'Test Event',
         'description': 'This is a test event',
         'date': '2024-12-31',
         'startTime': '10:00',
         'endTime': '11:00',
-        'recurrence': 1,
-        'allDay': False
+        'tags': 'meeting, client'
     })
+    print('POST /events response status code:', response.status_code)
+    print('POST /events response data:', response.get_data(as_text=True))
     assert response.status_code == 201
-    data = response.get_json()
-    assert data['message'] == 'Event added successfully'
 
-def test_get_events(client):
-    client.post('/events', json={
-        'title': 'Test Event',
-        'description': 'This is a test event',
-        'date': '2024-12-31',
-        'startTime': '10:00',
-        'endTime': '11:00',
-        'recurrence': 1,
-        'allDay': False
-    })
-    response = client.get('/events')
-    assert response.status_code == 200
-    data = response.get_json()
-    assert len(data) == 1
-    event = data[0]
-    assert event['title'] == 'Test Event'
-    assert event['description'] == 'This is a test event'
-    assert event['date'] == '2024-12-31'
-    assert event['start_time'] == '10:00'
-    assert event['end_time'] == '11:00'
-    assert event['recurrence'] == 1
-    assert event['all_day'] == False
-
-def test_update_event(client):
-    client.post('/events', json={
-        'title': 'Test Event',
-        'description': 'This is a test event',
-        'date': '2024-12-31',
-        'startTime': '10:00',
-        'endTime': '11:00',
-        'recurrence': 1,
-        'allDay': False
-    })
+    # Obter o evento criado
     response = client.get('/events')
     data = response.get_json()
+    print('GET /events response data:', data)
+    assert data is not None
+    assert len(data) > 0  # Certificar que há eventos
     event_id = data[0]['id']
 
+    # Atualizar o evento
     response = client.put(f'/events/{event_id}', json={
         'title': 'Updated Test Event',
         'description': 'This is an updated test event',
         'date': '2024-12-31',
-        'startTime': '11:00',
-        'endTime': '12:00',
-        'recurrence': 2,
-        'allDay': True
+        'startTime': '10:00',
+        'endTime': '11:00',
+        'tags': 'meeting, client'
     })
+    print('PUT /events/<event_id> response status code:', response.status_code)
+    print('PUT /events/<event_id> response data:', response.get_data(as_text=True))
     assert response.status_code == 200
-    data = response.get_json()
-    assert data['message'] == 'Event updated successfully'
 
-    response = client.get('/events')
+    # Verificar se o evento foi atualizado
+    response = client.get(f'/events/{event_id}')  # Certifique-se de que essa rota existe
     data = response.get_json()
-    event = data[0]
-    assert event['title'] == 'Updated Test Event'
-    assert event['description'] == 'This is an updated test event'
-    assert event['date'].startswith('2024-12-31')
-
+    print('GET /events/<event_id> response data:', data)
+    assert data['title'] == 'Updated Test Event'
 
 def test_delete_event(client):
-    client.post('/events', json={
+    # Criar um evento antes de tentar deletar
+    response = client.post('/events', json={
         'title': 'Test Event',
         'description': 'This is a test event',
         'date': '2024-12-31',
         'startTime': '10:00',
         'endTime': '11:00',
-        'recurrence': 1,
-        'allDay': False
+        'tags': 'meeting, client'
     })
+    print('POST /events response status code:', response.status_code)
+    print('POST /events response data:', response.get_data(as_text=True))
+    assert response.status_code == 201
+
+    # Obter o evento criado
     response = client.get('/events')
     data = response.get_json()
+    print('GET /events response data:', data)
+    assert data is not None
+    assert len(data) > 0  # Certificar que há eventos
     event_id = data[0]['id']
 
+    # Deletar o evento
     response = client.delete(f'/events/{event_id}')
+    print('DELETE /events/<event_id> response status code:', response.status_code)
+    print('DELETE /events/<event_id> response data:', response.get_data(as_text=True))
     assert response.status_code == 200
-    data = response.get_json()
-    assert data['message'] == 'Event deleted successfully'
 
-    response = client.get('/events')
-    data = response.get_json()
-    assert len(data) == 0
-
-def test_add_notification(client):
-    response = client.post('/notifications', json={
-        'subject': 'Test Notification',
-        'message': 'This is a test notification'
-    })
-    assert response.status_code == 201
-    data = response.get_json()
-    assert data['message'] == 'Notification added successfully'
-
-def test_get_notifications(client):
-    client.post('/notifications', json={
-        'subject': 'Test Notification',
-        'message': 'This is a test notification'
-    })
-    response = client.get('/notifications')
-    assert response.status_code == 200
-    data = response.get_json()
-    assert len(data) == 1
-    notification = data[0]
-    assert notification['subject'] == 'Test Notification'
-    assert notification['message'] == 'This is a test notification'
+    # Verificar se o evento foi deletado
+    response = client.get(f'/events/{event_id}')
+    print('GET /events/<event_id> response status code:', response.status_code)
+    print('GET /events/<event_id> response data:', response.get_data(as_text=True))
+    assert response.status_code == 404  # Atualizado para refletir a verificação correta

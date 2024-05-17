@@ -1,35 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checar Eventos</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/styles.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .modal-dialog {
-            max-width: 90%;  /* ou qualquer outra porcentagem ou valor fixo que você preferir */
-        }
-
-        .action-buttons button {
-            display: inline-block;
-            margin-right: 5px;
-            white-space: nowrap;
-        }
-        .action-buttons .btn i {
-            font-size: 14px; /* Diminuir o tamanho dos ícones */
-        }
-
-    </style>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Checar Eventos</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
 <body>
     <header>
         <h1>Checar Eventos</h1>
     </header>
-    <nav>
-    </nav>
+    <nav></nav>
     <div class="container">
         <form id="filter-form">
             <label for="start-date">Data de Início:</label>
@@ -38,7 +22,6 @@
             <input type="date" id="end-date" name="end-date" required>
             <button type="submit" class="btn btn-primary">Filtrar</button>
         </form>
-        <!-- Modal de exibição de eventos -->
         <div class="modal fade" id="eventsModal" tabindex="-1" role="dialog" aria-labelledby="eventsModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -57,14 +40,11 @@
                                     <th>Data</th>
                                     <th>Hora de Início</th>
                                     <th>Hora de Fim</th>
-                                    <th>Recorrência</th>
-                                    <th>Dia Todo</th>
+                                    <th>Tags</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- Eventos serão inseridos aqui -->
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                     <div class="modal-footer">
@@ -73,7 +53,6 @@
                 </div>
             </div>
         </div>
-        <!-- Modal de edição de evento -->
         <div class="modal fade" id="editEventModal" tabindex="-1" role="dialog" aria-labelledby="editEventModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -107,12 +86,8 @@
                                 <input type="time" class="form-control" id="edit-end-time">
                             </div>
                             <div class="form-group">
-                                <label for="edit-recurrence">Recorrência</label>
-                                <input type="text" class="form-control" id="edit-recurrence">
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="edit-all-day">
-                                <label class="form-check-label" for="edit-all-day">Dia Todo</label>
+                                <label for="edit-tags">Tags</label>
+                                <input type="text" class="form-control" id="edit-tags">
                             </div>
                             <button type="submit" class="btn btn-primary">Salvar</button>
                         </form>
