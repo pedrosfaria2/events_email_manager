@@ -16,7 +16,7 @@ def create_app(config_name='None'):
     with app.app_context():
         db.create_all()
 
-    from .app import main as main_blueprint
+    from .app import main as main_blueprint  # Certifique-se de que 'main' seja o blueprint que você deseja registrar
     app.register_blueprint(main_blueprint)
 
     return app

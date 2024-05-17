@@ -101,10 +101,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 var emailBody = `Dear Client,\n\nWe would like to inform you about the following events at B3:\n\n`;
                 
                 data.events.forEach(event => {
-                    emailBody += `- ${event.title} on ${event.date} from ${event.startTime} to ${event.endTime}\n  Description: ${event.description}\n  Tags: ${event.tags}\n\n`;
+                    emailBody += `- ${event.title} on ${event.date} from ${event.startTime} to ${event.endTime}\n  Description: ${event.description}\n\n`;
                 });
 
-                emailBody += `Best regards and good trading,\nHFT Team of Nova Futura Investimentos.`;
+                emailBody += `Best regards and good trading,\n\nHFT Team of Nova Futura Investimentos.`;
 
                 // Abrir o cliente de email com o conteúdo gerado
                 var mailto_link = `mailto:?subject=${encodeURIComponent('Important B3 Events')}&body=${encodeURIComponent(emailBody)}`;

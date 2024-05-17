@@ -11,7 +11,7 @@ from backend import create_app, db
 from backend.add_event_to_db import add_events_to_db
 
 # Crie a aplicação Flask
-app = create_app()  # Substitua 'your_config_name' pelo nome correto da configuração
+app = create_app() 
 
 Outlook = win32com.client.Dispatch("Outlook.Application")
 ns = Outlook.GetNamespace("MAPI")
