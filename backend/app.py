@@ -8,22 +8,27 @@ main = Blueprint('main', __name__)
 def send_events():
     data = request.get_json()
     event_ids = data.get('event_ids', [])
-    
-    if not event_ids:
-        return jsonify({'message': 'Nenhum evento selecionado.'}), 400
-    
-    events = Event.query.filter(Event.id.in_(event_ids)).all()
-    
-    if not events:
-        return jsonify({'message': 'Nenhum evento encontrado.'}), 404
 
-    subject = "Eventos Selecionados"
-    body = "Aqui estão os eventos selecionados:\n\n"
-    
+    if not event_ids:
+        return jsonify({'message': 'No event IDs provided.'}), 400
+
+    events = Event.query.filter(Event.id.in_(event_ids)).all()
+    if not events:
+        return jsonify({'message': 'No events found.'}), 404
+
+    event_data = []
     for event in events:
-        body += f"Título: {event.title}\nDescrição: {event.description}\nData: {event.date.strftime('%Y-%m-%d')}\nHora de Início: {event.start_time}\nHora de Fim: {event.end_time}\nTags: {event.tags}\n\n"
-    
-    return jsonify({'subject': subject, 'body': body}), 200
+        event_data.append({
+            'title': event.title,
+            'description': event.description,
+            'date': event.date.strftime('%Y-%m-%d'),
+            'startTime': event.start_time,
+            'endTime': event.end_time,
+            'tags': event.tags
+        })
+
+    return jsonify({'subject': 'Important B3 Events', 'events': event_data}), 200
+
 
 @main.route('/events/<int:event_id>', methods=['PUT'])
 def update_event(event_id):

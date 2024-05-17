@@ -13,6 +13,30 @@
         <h1>Enviar Eventos</h1>
     </header>
     <div class="container">
+        <form id="filter-form">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="tag">Tag</label>
+                    <select id="tag" class="form-control">
+                        <option value="">Todas</option>
+                        <option value="aaa">aaa</option>
+                        <option value="ablublue">ablublue</option>
+                        <option value="cachorro">cachorro</option>
+                        <option value="salame">salame</option>
+                        <option value="N/A">N/A</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="start-date">Data de Início</label>
+                    <input type="date" class="form-control" id="start-date">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="end-date">Data de Fim</label>
+                    <input type="date" class="form-control" id="end-date">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
         <form id="send-events-form">
             <table class="table table-striped" id="events-table">
                 <thead>
@@ -39,6 +63,6 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="/static/main.js"></script>
+    <script src="/static/send_events.js"></script>
 </body>
 </html>
