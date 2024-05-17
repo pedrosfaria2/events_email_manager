@@ -30,22 +30,37 @@ def send_events():
     return jsonify({'subject': 'Important B3 Events', 'events': event_data}), 200
 
 
-@main.route('/events/<int:event_id>', methods=['PUT'])
+@main.route('/events/<int:event_id>', methods=['PATCH', 'PUT'])
 def update_event(event_id):
     data = request.get_json()
-    event = db.session.get(Event, event_id)  # Alterado para db.session.get
-    if not event:
-        return jsonify({'message': 'Event not found'}), 404
-
-    event.title = data['title']
-    event.description = data['description']
-    event.date = datetime.strptime(data['date'], '%Y-%m-%d').date()  # Converter string para date
-    event.start_time = data.get('startTime')
-    event.end_time = data.get('endTime')
-    event.tags = data.get('tags', '')
+    event = db.session.get(Event, event_id)
+    if event is None:
+        return jsonify({"message": "Event not found"}), 404
+    
+    if request.method == 'PATCH':
+        if 'title' in data:
+            event.title = data['title']
+        if 'description' in data:
+            event.description = data['description']
+        if 'date' in data:
+            event.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
+        if 'startTime' in data:
+            event.start_time = data['startTime']
+        if 'endTime' in data:
+            event.end_time = data['endTime']
+        if 'tags' in data:
+            event.tags = data['tags']
+    else:
+        event.title = data['title']
+        event.description = data['description']
+        event.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
+        event.start_time = data['startTime']
+        event.end_time = data['endTime']
+        event.tags = data['tags']
 
     db.session.commit()
-    return jsonify({'message': 'Event updated successfully'}), 200
+    return jsonify({"message": "Event updated successfully"})
+
 
 @main.route('/events/<int:event_id>', methods=['DELETE'])
 def delete_event(event_id):
