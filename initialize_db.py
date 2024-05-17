@@ -1,7 +1,11 @@
-from backend import create_app, db
-from backend.models import Event, Notification
+from flask import Flask
+from backend.models import db, Event, Notification
 
-app = create_app()
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+
 with app.app_context():
-    db.drop_all()
     db.create_all()
+    print("Banco de dados inicializado e tabelas criadas.")

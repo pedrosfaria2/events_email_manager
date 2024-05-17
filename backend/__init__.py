@@ -1,7 +1,7 @@
 from flask import Flask
 from .models import db
 
-def create_app(config_name=None):
+def create_app(config_name='None'):
     app = Flask(__name__, static_folder='../frontend/static', template_folder='../frontend')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
