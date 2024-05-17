@@ -133,15 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Inicialização
-    if (document.getElementById('send-events-form')) {
-        loadSendEvents();
-    }
-
     if (document.getElementById('filter-form')) {
         loadCheckEvents();
-    }
-
-    if (document.getElementById('event-form')) {
-        addEvent();
     }
 });

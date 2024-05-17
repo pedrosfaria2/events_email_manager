@@ -102,7 +102,17 @@ def add_event():
 
 @main.route('/events', methods=['GET'])
 def get_events():
-    events = Event.query.all()
+    start_date_str = request.args.get('start')
+    end_date_str = request.args.get('end')
+
+    if start_date_str and end_date_str:
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+
+        events = Event.query.filter(Event.date >= start_date, Event.date <= end_date).all()
+    else:
+        events = Event.query.all()
+
     events_list = []
     for event in events:
         events_list.append({
@@ -110,11 +120,12 @@ def get_events():
             'title': event.title,
             'description': event.description,
             'date': event.date.strftime('%Y-%m-%d'),
-            'startTime': event.start_time,  # Corrigido para startTime
-            'endTime': event.end_time,      # Corrigido para endTime
+            'startTime': event.start_time,
+            'endTime': event.end_time,
             'tags': event.tags
         })
-    return jsonify(events_list), 200
+
+    return jsonify(events_list)
 
 @main.route('/events/<int:event_id>', methods=['GET'])
 def get_event(event_id):
