@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     selectCell.appendChild(checkbox);
 
                     row.insertCell(1).textContent = event.title;
-                    row.insertCell(2).textContent = event.description.length > 30 ? event.description.substring(0, 30) + '...' : event.description; // Limitar descrição a 30 caracteres
+                    row.insertCell(2).textContent = event.description.length > 50 ? event.description.substring(0, 30) + '...' : event.description; // Limitar descrição a 30 caracteres
                     row.insertCell(3).textContent = event.date;
                     row.insertCell(4).textContent = event.startTime || 'N/A';
                     row.insertCell(5).textContent = event.endTime || 'N/A';
