@@ -88,6 +88,9 @@ def send_events_page():
 @main.route('/events', methods=['POST'])
 def add_event():
     data = request.get_json()
+    if 'title' not in data or 'date' not in data:
+        return {"error": "title and date are required fields"}, 400  # Bad Request
+
     event = Event(
         title=data['title'],
         description=data['description'],

@@ -2,6 +2,8 @@ import sys
 import os
 import pytest
 from backend import create_app, db
+from backend.models import Event
+from datetime import date
 
 # Adiciona o caminho do backend ao sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
