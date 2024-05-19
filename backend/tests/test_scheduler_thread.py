@@ -1,8 +1,8 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from backend import create_app
-from backend.scheduler_thread import send_weekly_automatic_exercise_email, send_notifications, start_scheduler_thread
 from datetime import datetime
+from backend import create_app
+from backend.scheduler_thread import send_weekly_automatic_exercise_email, start_scheduler_thread
 
 @pytest.fixture
 def app():
@@ -11,7 +11,7 @@ def app():
         yield app
 
 def test_send_weekly_automatic_exercise_email(app):
-    with patch('backend.scheduler_thread.send_email') as mock_send_email:
+    with patch('backend.email_service.send_email') as mock_send_email:
         mock_event = MagicMock()
         mock_event.title = "Test Event"
         mock_event.date = datetime(2024, 5, 17)

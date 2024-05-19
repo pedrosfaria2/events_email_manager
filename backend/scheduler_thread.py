@@ -35,7 +35,7 @@ def send_notifications(app):
     with app.app_context():
         notifications = Notification.query.all()
         for notification in notifications:
-            send_email(notification.subject, notification.message, "recipient@example.com")
+            send_email(notification.subject, notification.message, "")
 
 def run_scheduler(app):
     pythoncom.CoInitialize()
