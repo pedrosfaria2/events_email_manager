@@ -4,6 +4,7 @@ import threading
 from datetime import datetime, timedelta
 from .models import Event, Notification
 from .email_service import send_email
+from .email_checker import check_emails
 import pythoncom
 
 disabled_jobs = set()
@@ -44,13 +45,22 @@ def send_notifications(app):
 def run_scheduler(app):
     pythoncom.CoInitialize()
     global job_counter
-    job = schedule.every().monday.at("07:30").do(send_weekly_automatic_exercise_email, app=app)
-    job_id = job_counter
-    job_registry[job_id] = {
-        'job': job,
+    
+    job1 = schedule.every().monday.at("07:30").do(send_weekly_automatic_exercise_email, app=app)
+    job_registry[job_counter] = {
+        'job': job1,
         'name': 'send_weekly_automatic_exercise_email',
         'frequency': 'every monday',
         'time': '07:30'
+    }
+    job_counter += 1
+    
+    job2 = schedule.every(1).seconds.do(check_emails)
+    job_registry[job_counter] = {
+        'job': job2,
+        'name': 'check_emails',
+        'frequency': 'every 10 minutes',
+        'time': 'N/A'
     }
     job_counter += 1
 
