@@ -1,0 +1,19 @@
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+
+# Ignore virtual environments
+venv/
+env/
+
+# Ignore IDE configuration files
+.idea/
+.vscode/
+
+# Ignore the emails directory
+backend/emails/
+
+# Other files and directories to ignore
+node_modules/
+dist/
+build/
