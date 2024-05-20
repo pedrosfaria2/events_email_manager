@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Scheduled Jobs</title>
+    <title>Gerenciar Jobs Agendados</title>
     <link rel="stylesheet" href="static/styles.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -31,6 +31,24 @@
             color: white;
             padding: 20px 0;
             text-align: center;
+        }
+
+        /* Botões de navegação */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .nav-buttons button {
+            width: 45px;
+            height: 45px;
+            border: none;
+            background: none;
+        }
+
+        .nav-buttons button i {
+            font-size: 24px;
         }
 
         /* Estilo do contêiner */
@@ -84,14 +102,26 @@
 </head>
 <body>
     <header>
-        <h1>Manage Scheduled Jobs</h1>
+        <h1>Gerenciar Jobs Agendados</h1>
     </header>
     <div class="container">
+        <div class="nav-buttons">
+            <button onclick="goBack()" title="Voltar"><i class="fa fa-arrow-left"></i></button>
+            <button onclick="goHome()" title="Home"><i class="fa fa-home"></i></button>
+        </div>
         <div id="scheduled-jobs-container"></div>
     </div>
     <footer>
         <p>&copy; 2024 Nova Futura Investimentos</p>
     </footer>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+    </script>
     <script src="static/scheduled_jobs.js"></script>
 </body>
 </html>
