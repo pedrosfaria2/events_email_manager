@@ -1,8 +1,13 @@
 from flask import Blueprint, request, jsonify, send_from_directory, render_template
 from datetime import datetime
 from .models import db, Event, Notification
+import react
 
 main = Blueprint('main', __name__)
+
+@main.route('/manage_scheduled_jobs.html')
+def manage_scheduled_jobs():
+    return render_template('manage_scheduled_jobs.html')
 
 @main.route('/send_events', methods=['POST'])
 def send_events():

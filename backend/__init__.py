@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from .models import db
 from .scheduler_thread import start_scheduler_thread
 
@@ -18,7 +18,13 @@ def create_app(config_name='None'):
         db.create_all()
 
     from .app import main as main_blueprint
+    from .scheduler_routes import scheduler_bp as scheduler_blueprint
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(scheduler_blueprint, url_prefix='/api')
+
+    @app.route('/static/<path:path>')
+    def static_files(path):
+        return send_from_directory(app.static_folder, path)
 
     start_scheduler_thread(app)
 

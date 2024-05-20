@@ -1,10 +1,14 @@
 import schedule
-import time
+import time as pytime
 import threading
 from datetime import datetime, timedelta
-from backend.models import Event, Notification
-from backend.email_service import send_email
+from .models import Event, Notification
+from .email_service import send_email
 import pythoncom
+
+disabled_jobs = set()
+job_registry = {}
+job_counter = 1
 
 def send_weekly_automatic_exercise_email(app):
     with app.app_context():
@@ -39,14 +43,42 @@ def send_notifications(app):
 
 def run_scheduler(app):
     pythoncom.CoInitialize()
-    schedule.every().monday.at("07:30").do(send_weekly_automatic_exercise_email, app=app)
+    global job_counter
+    job = schedule.every().monday.at("07:30").do(send_weekly_automatic_exercise_email, app=app)
+    job_id = job_counter
+    job_registry[job_id] = {
+        'job': job,
+        'name': 'send_weekly_automatic_exercise_email',
+        'frequency': 'every monday',
+        'time': '07:30'
+    }
+    job_counter += 1
 
     while True:
         schedule.run_pending()
-        time.sleep(1)
+        pytime.sleep(1)
     pythoncom.CoUninitialize()
 
 def start_scheduler_thread(app):
     scheduler_thread = threading.Thread(target=run_scheduler, args=(app,))
     scheduler_thread.daemon = True
     scheduler_thread.start()
+
+def get_scheduled_jobs():
+    jobs = []
+    for job_id, job_info in job_registry.items():
+        job = job_info['job']
+        jobs.append({
+            'id': job_id,
+            'name': job_info['name'],
+            'frequency': job_info['frequency'],
+            'time': job_info['time'],
+            'enabled': job_id not in disabled_jobs
+        })
+    return jobs
+
+def enable_job(job_id):
+    disabled_jobs.discard(job_id)
+
+def disable_job(job_id):
+    disabled_jobs.add(job_id)
