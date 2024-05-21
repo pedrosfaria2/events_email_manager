@@ -1,9 +1,66 @@
-from flask import Blueprint, request, jsonify, send_from_directory, render_template
+from flask import Blueprint, request, jsonify, send_from_directory, render_template, url_for
 from datetime import datetime
 from .models import db, Event, Notification, EmailLog
 import react
+import os
+from bs4 import BeautifulSoup
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 main = Blueprint('main', __name__)
+
+@main.route('/email_logs', methods=['GET'])
+def fetch_email_logs():
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+    query_term = request.args.get('query')
+
+    query = EmailLog.query
+
+    if start_date:
+        query = query.filter(EmailLog.date_sent >= start_date)
+    if end_date:
+        query = query.filter(EmailLog.date_sent <= end_date)
+    if query_term:
+        query = query.filter(
+            (EmailLog.subject.ilike(f'%{query_term}%'))
+        )
+
+    email_logs = query.all()
+
+    email_logs_list = [
+        {
+            'id': log.id,
+            'subject': log.subject,
+            'date_sent': log.date_sent.strftime('%Y-%m-%d %H:%M:%S'),
+            'html_file': log.html_file
+        } for log in email_logs
+    ]
+    return jsonify(email_logs_list)
+
+@main.route('/email_logs/<int:email_id>', methods=['GET'])
+def get_email_log(email_id):
+    email_log = EmailLog.query.get(email_id)
+    if not email_log:
+        return jsonify({'message': 'Email not found'}), 404
+
+    email_path = os.path.join(BASE_DIR, 'emails/htmls', email_log.html_file)
+    with open(email_path, 'r', encoding='utf-8') as f:
+        html_content = f.read()
+
+    soup = BeautifulSoup(html_content, 'html.parser')
+    images = soup.find_all('img')
+    for img in images:
+        src = img.get('src')
+        if src and src.startswith('cid:'):
+            cid = src[4:]
+            img['src'] = f'/emails/attachments/{cid}.png'
+
+    return str(soup)
+
+@main.route('/view_emails.html')
+def view_emails_page():
+    return render_template('view_emails.html')
 
 @main.route('/reset_email_logs', methods=['POST'])
 def reset_email_logs():
