@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        /* Reset básico */
         * {
             margin: 0;
             padding: 0;
@@ -69,6 +68,7 @@
             background-color: rgb(0,0,0);
             background-color: rgba(0,0,0,0.4);
             padding-top: 60px;
+            text-align: center;
         }
 
         .modal-content {
@@ -77,6 +77,24 @@
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
+            text-align: center;
+        }
+
+        .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        }
+
+        .nav-buttons button {
+            width: 45px;
+            height: 45px;
+            border: none;
+            background: none;
+        }
+
+        .nav-buttons button i {
+            font-size: 24px;
         }
 
         .close {
@@ -84,6 +102,7 @@
             float: right;
             font-size: 28px;
             font-weight: bold;
+            text-align: center;
         }
 
         .close:hover,
@@ -117,6 +136,10 @@
         .filter-container button:hover {
             background-color: #1a242f;
         }
+
+        .modal-content {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -124,6 +147,10 @@
         <h1>Verificar Emails</h1>
     </header>
     <div class="container">
+        <div class="nav-buttons">
+            <button onclick="goBack()" title="Voltar"><i class="fa fa-arrow-left"></i></button>
+            <button onclick="goHome()" title="Home"><i class="fa fa-home"></i></button>
+        </div>
         <div class="filter-container">
             <input type="date" id="start_date">
             <input type="date" id="end_date">
@@ -141,6 +168,14 @@
     <footer>
         <p>&copy; 2024 Nova Futura Investimentos</p>
     </footer>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+    </script>
     <script src="static/view_emails.js"></script>
 </body>
 </html>

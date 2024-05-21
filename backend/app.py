@@ -1,13 +1,27 @@
 from flask import Blueprint, request, jsonify, send_from_directory, render_template, url_for
-from datetime import datetime
+from datetime import datetime, timedelta
 from .models import db, Event, Notification, EmailLog
 import react
 import os
 from bs4 import BeautifulSoup
+from sqlalchemy import desc
+import win32com.client
+import pythoncom
+from .email_checker import check_emails, send_saved_email
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 main = Blueprint('main', __name__)
+
+@main.route('/send_email/<int:email_id>', methods=['POST'])
+def send_email(email_id):
+    try:
+        send_saved_email(email_id)
+        return jsonify({'message': 'Email sent successfully'}), 200
+    except ValueError as e:
+        return jsonify({'message': str(e)}), 404
+    except Exception as e:
+        return jsonify({'message': f'Failed to send email: {str(e)}'}), 500
 
 @main.route('/email_logs', methods=['GET'])
 def fetch_email_logs():
@@ -15,12 +29,15 @@ def fetch_email_logs():
     end_date = request.args.get('end_date')
     query_term = request.args.get('query')
 
-    query = EmailLog.query
+    query = EmailLog.query.order_by(desc(EmailLog.id))
 
     if start_date:
-        query = query.filter(EmailLog.date_sent >= start_date)
+        start_datetime = datetime.strptime(start_date, '%Y-%m-%d')
+        query = query.filter(EmailLog.date_sent >= start_datetime)
     if end_date:
-        query = query.filter(EmailLog.date_sent <= end_date)
+        # Adicionando 1 dia à data final para considerar o intervalo completo do último dia
+        end_datetime = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)
+        query = query.filter(EmailLog.date_sent <= end_datetime)
     if query_term:
         query = query.filter(
             (EmailLog.subject.ilike(f'%{query_term}%'))

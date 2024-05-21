@@ -38,7 +38,25 @@ function showEmail(emailId) {
             const modal = document.getElementById('emailModal');
             const content = document.getElementById('email-content');
             content.innerHTML = html;
+
+            // Adicionar botão para enviar email
+            const sendButton = document.createElement('button');
+            sendButton.textContent = 'Enviar Email';
+            sendButton.onclick = () => sendEmail(emailId);
+            content.appendChild(sendButton);
+
             modal.style.display = 'block';
+        });
+}
+
+function sendEmail(emailId) {
+    fetch(`/send_email/${emailId}`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
 }
 

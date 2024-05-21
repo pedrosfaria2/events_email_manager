@@ -14,12 +14,10 @@ class Event(db.Model):
     tags = db.Column(db.String(200), nullable=True)
 
 
-
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     subject = db.Column(db.String(100), nullable=False)
     message = db.Column(db.Text, nullable=False)
-    
 
 class EmailLog(db.Model):
     __tablename__ = 'email_logs'

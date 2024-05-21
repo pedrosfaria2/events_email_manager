@@ -4,6 +4,7 @@ import re
 from bs4 import BeautifulSoup
 from datetime import datetime
 from .models import db, EmailLog
+import pythoncom
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -40,7 +41,6 @@ def save_email_content(message, email_id):
     with open(email_path, 'w', encoding='utf-8') as f:
         f.write(content)
     
-    # Save only the filename in the database
     email_log = EmailLog(subject=subject, html_file=email_filename)
     db.session.add(email_log)
     db.session.commit()
@@ -116,7 +116,7 @@ def check_emails(app):
                                         attachment = new_message.Attachments.Add(img_path)
                                         attachment.PropertyAccessor.SetProperty("http://schemas.microsoft.com/mapi/proptag/0x3712001F", cid)
                                     
-                                    #new_message.Send()
+                                    new_message.Send()
 
                                     email_log = EmailLog(subject=subject, date_sent=datetime.now(), html_file=email_filename)
                                     db.session.add(email_log)
@@ -126,3 +126,39 @@ def check_emails(app):
                                         f.write(f'{unique_id} {datetime.now()}\n')
                                 except Exception as e:
                                     print(f"Erro ao processar o e-mail: {e}")
+
+def send_saved_email(email_id):
+    pythoncom.CoInitialize()
+    email_log = EmailLog.query.get(email_id)
+    if not email_log:
+        raise ValueError('Email not found')
+
+    email_path = os.path.join(BASE_DIR, 'emails/htmls', email_log.html_file)
+    with open(email_path, 'r', encoding='utf-8') as f:
+        html_content = f.read()
+
+    try:
+        outlook = win32com.client.Dispatch("Outlook.Application")
+        new_message = outlook.CreateItem(0)
+        new_message.Subject = "[B3] " + email_log.subject
+        new_message.HTMLBody = html_content
+        new_message.To = "pedro.faria@novafutura.com.br"
+
+        attachment_dir = os.path.join(BASE_DIR, 'emails/attachments')
+
+        # Adicionar imagens inline
+        soup = BeautifulSoup(html_content, "html.parser")
+        images = soup.find_all('img')
+        for img in images:
+            src = img.get('src')
+            if src and src.startswith('/static/attachments/'):
+                cid = src.split('/')[-1].split('.')[0][3:]  # remover 'cid'
+                img_path = os.path.join(attachment_dir, f"cid{cid}.png")
+                attachment = new_message.Attachments.Add(img_path)
+                attachment.PropertyAccessor.SetProperty("http://schemas.microsoft.com/mapi/proptag/0x3712001F", cid)
+
+        new_message.Display(True)
+        #new_message.Send()
+    except Exception as e:
+        print(f'Failed to send email: {str(e)}')
+        raise
