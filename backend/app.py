@@ -1,9 +1,40 @@
 from flask import Blueprint, request, jsonify, send_from_directory, render_template
 from datetime import datetime
-from .models import db, Event, Notification
+from .models import db, Event, Notification, EmailLog
 import react
 
 main = Blueprint('main', __name__)
+
+@main.route('/reset_email_logs', methods=['POST'])
+def reset_email_logs():
+    try:
+        # Drop the table
+        EmailLog.__table__.drop(db.engine)
+        # Recreate the table
+        db.create_all()
+        return jsonify({'status': 'success', 'message': 'EmailLog table reset successfully'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@main.route('/email_logs', methods=['GET'])
+def get_email_logs():
+    email_logs = EmailLog.query.all()
+    email_logs_list = [
+        {
+            'id': log.id,
+            'subject': log.subject,
+            'date_sent': log.date_sent.strftime('%Y-%m-%d %H:%M:%S'),
+            'html_file': log.html_file
+        } for log in email_logs
+    ]
+    return jsonify(email_logs_list)
+
+@main.route('/list_tables')
+def list_tables():
+    inspector = db.inspect(db.engine)
+    tables = inspector.get_table_names()
+    return jsonify(tables)
 
 @main.route('/manage_scheduled_jobs.html')
 def manage_scheduled_jobs():

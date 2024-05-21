@@ -55,11 +55,11 @@ def run_scheduler(app):
     }
     job_counter += 1
     
-    job2 = schedule.every(1).seconds.do(check_emails)
+    job2 = schedule.every(1).seconds.do(check_emails, app=app)  # Verificação de e-mails a cada 10 minutos
     job_registry[job_counter] = {
         'job': job2,
         'name': 'check_emails',
-        'frequency': 'every 10 minutes',
+        'frequency': 'every 1 seconds',
         'time': 'N/A'
     }
     job_counter += 1

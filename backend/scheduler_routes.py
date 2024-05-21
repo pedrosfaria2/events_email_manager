@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from .scheduler_thread import get_scheduled_jobs, enable_job, disable_job
 from .email_checker import check_emails
 
@@ -22,7 +22,7 @@ def disable_scheduled_job(job_id):
 @scheduler_bp.route('/check-emails', methods=['GET'])
 def manual_check_emails():
     try:
-        check_emails()
+        check_emails(current_app)
         return jsonify({'status': 'success'})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
